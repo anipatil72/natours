@@ -15,6 +15,10 @@ const DB = process.env.DATABASE.replace(
   process.env.DATABASE_PASSWORD
 );
 
+// const MongoClient = require('mongodb').MongoClient;
+// const uri = DB;
+// const client = new MongoClient(uri, { useUnifiedTopology: true });
+
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
@@ -33,5 +37,12 @@ process.on('unhandledRejection', err => {
   console.log(err.name, err.message);
   server.close(() => {
     process.exit(1);
+  });
+});
+
+process.on('SIGTERM', () => {
+  console.log('👋 SIGTERM RECEIVED. Shutting down gracefully');
+  server.close(() => {
+    console.log('💥 Process terminated!');
   });
 });
